@@ -1,0 +1,63 @@
+22. 
+
+Select system call is used to see if it is safe to use a resource, ie it does not block.
+Suppose this is not available, but we have the following facility
+	alarm clock to be set that interrupt blocked system call.
+So if I had a system call that can interrupt a blocked system call after some time, it is possible
+to implement the threading package in user space, following is usually done if threads
+are in user space with select system call
+if (select(some resource))
+	then use this resource
+else
+	continue executing the other threads
+
+say we hade some system call, that interrupted a blocked system call after some time 
+interrupt_blocked_syscall(), so in the user threading packaging, we can write the code to
+use some resource even if is going to block and then just set an alarm just before in order to
+handle the blocking
+interrupt_blocked_syscall(s1)
+do_syscall(s1)
+if interrupted then carry on with the other threads.
+
+cons 
+- there is a delay of a fixed amount, where all the threads inside the process is blocked even if
+a single system call in any thread that blocks.
+
+
+24.
+
+The perterson's solution to achieve mutual exclusion is that we need to maintain an 
+array containing the interested value for each of the process, say we have 3 processes
+then the array has 3 boolean values, one for each process saying which process is 
+interested in entering the critical region.
+Until no other process is interested in the critical region, the process just
+keeps on waiting, once no other is interested, it enters the critical region. 
+At one point only one process can enter the interested region. 
+Suppose process scheduling is preemptive, then the peterson's solution is actually designed 
+for this case, in case of non-preemptive, one of the thread may go into an infinite loop
+if not yielded in proper time
+
+25.
+Priority inversion is when the High priority is waiting on a low priority 
+process to exit the critical region, but due to the scheduling policy
+the low priority process cannot run when high priority is in running state.
+Depending on the implementation of user level thread package, if it is not
+made preemptable then this problem may not happen, but if priority is implemented
+and made preemptable then this problem happens both in kernel and user space.
+
+27.
+No matter user or kernel threads, individual threads must have stack space
+of their own.
+
+28.
+Yes it is possible to have race conditions even if concurrency is simulated in a 
+sequential way, since concurrency and parallelism are 2 different things.
+
+
+44.
+
+Response time is the time it takes for the first response to complete.
+Shortest job first is a way to minimize average response time.
+
+
+
